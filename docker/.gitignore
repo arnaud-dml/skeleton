@@ -1,0 +1,8 @@
+###> docker/logs ###
+/php/logs/*
+/nginx/logs/*
+### docker/logs <###
+
+###> docker/data ###
+/mysql/db/*
+### docker/data <###

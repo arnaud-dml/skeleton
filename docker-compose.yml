@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql
+    # container_name: ${APP_URL}-db.mysql
+    container_name: project-db.mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/mysql/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  php:
+    build: ./docker/php
+      # container_name: ${APP_URL}-web.srv
+    container_name: project-web.srv
+    ports:
+      - 9000:9000
+    links:
+      - db:mysqldb
+    volumes:
+      - ./server:/var/www/html
+      - ./docker/php/logs:/var/www/html/logs
+  # web.client:
+      # container_name: ${APP_URL}-web.client
+  nginx:
+    build: ./docker/nginx
+    # container_name: ${APP_URL}-server
+    container_name: project-server
+    ports:
+      - 80:80
+    links:
+      - php
+    volumes_from:
+      - php
+    volumes:
+      - ./docker/nginx/logs/:/var/log/nginx
+    # elk:
+    #   image: willdurand/elk
+    #   ports:
+    #     - 81:80
+    #   volumes:
+    #     - .docker/elk/logstash:/etc/logstash
+    #     - .docker/elk/logstash/patterns:/opt/logstash/patterns
+    #   volumes_from:
+    #     - php
+    #     - nginx
