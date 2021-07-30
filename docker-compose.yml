@@ -25,11 +25,11 @@ services:
   # web.client:
       # container_name: ${APP_URL}-web.client
   nginx:
-    build: ./docker/nginx
+    image: nginx:stable-alpine
     # container_name: ${APP_URL}-server
     container_name: project-server
     ports:
-      - 80:80
+      - 8080:80
     links:
       - php
     volumes_from:
