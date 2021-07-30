@@ -35,7 +35,11 @@ services:
     volumes_from:
       - php
     volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./docker/nginx/logs/:/var/log/nginx
+    depends_on:
+      - php
+      - db
     # elk:
     #   image: willdurand/elk
     #   ports:
