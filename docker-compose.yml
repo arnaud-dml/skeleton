@@ -1,6 +1,8 @@
 version: '3.8'
 
 services:
+
+  # mysql
   db:
     image: mysql
     # container_name: ${APP_URL}-db.mysql
@@ -11,9 +13,11 @@ services:
       - ./docker/mysql/db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
+
+  # php
   php:
     build: ./docker/php
-      # container_name: ${APP_URL}-web.srv
+    # container_name: ${APP_URL}-web.srv
     container_name: project-web.srv
     ports:
       - 9000:9000
@@ -22,8 +26,21 @@ services:
     volumes:
       - ./server:/var/www/html
       - ./docker/php/logs:/var/www/html/logs
-  # web.client:
-      # container_name: ${APP_URL}-web.client
+
+  # node
+  node:
+    build: ./docker/node
+    # image: node:latest
+    # container_name: ${APP_URL}-web.client
+    container_name: project-web.client
+    ports:
+      - "3000:3000"
+    volumes:
+        - ./client:/var/www/html
+    working_dir: /var/www/html
+    command: yarn start
+
+  # nginx
   nginx:
     image: nginx:stable-alpine
     # container_name: ${APP_URL}-server
@@ -40,6 +57,7 @@ services:
     depends_on:
       - php
       - db
+
     # elk:
     #   image: willdurand/elk
     #   ports:
